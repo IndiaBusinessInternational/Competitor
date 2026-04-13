@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IBI Competitor Price Link</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-muted: #64748b;
+            --border: #e2e8f0; --primary: #0284c7; --primary-hover: #0369a1;
+            --amazon: #f59e0b; --flipkart: #2563eb; --shopsy: #0ea5e9; 
+            --meesho: #d946ef; --shopclues: #10b981;
+        }
+        [data-theme="dark"] {
+            --bg: #0f172a; --surface: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
+            --border: #334155; --primary: #38bdf8; --primary-hover: #7dd3fc;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; transition: 0.3s; }
+        
+        .container { width: 100%; max-width: 800px; margin-top: 10px; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .header h1 { font-size: 1.5rem; font-weight: 700; }
+        .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+        
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-bottom: 24px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .full-width { grid-column: span 2; }
+        
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); text-transform: uppercase; }
+        input[type="text"], input[type="number"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 1rem; outline: none; }
+        input:focus { border-color: var(--primary); }
+        
+        .image-upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 40px 20px; text-align: center; cursor: pointer; background: var(--bg); position: relative; overflow: hidden; height: 100%; display: flex; flex-direction: column; justify-content: center;}
+        .image-upload-area img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: var(--surface); display: none; }
+        
+        .btn-search { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 10px;}
+        .btn-search:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        /* Platform Results Grid */
+        .results-container { display: none; }
+        .platform-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;}
+        .platform-info { flex: 1; min-width: 200px;}
+        .platform-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;}
+        .platform-price { font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 4px;}
+        .platform-brands { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .platform-btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; color: white; text-align: center; font-size: 0.9rem; transition: 0.2s;}
+        .platform-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        
+        .amz-btn { background: var(--amazon); color: #000; }
+        .flp-btn { background: var(--flipkart); }
+        .shp-btn { background: var(--shopsy); }
+        .msh-btn { background: var(--meesho); }
+        .scl-btn { background: var(--shopclues); }
+
+        .spinner { display: none; width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .platform-card { flex-direction: column; align-items: stretch; text-align: center; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <div class="container">
+        <div class="header">
+            <h1>📊 Competitor Price Link</h1>
+            <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+        </div>
+
+        <div class="card">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <div class="image-upload-area" id="dropzone" onclick="document.getElementById('fileInput').click()">
+                        <p style="font-size: 24px; margin-bottom: 10px;">📸</p>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">Tap to upload image</p>
+                        <img id="imagePreview" src="" alt="Preview">
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleImage(this)">
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="productName" placeholder="Exact product name..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" id="quantity" value="1" min="1" required>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-search" id="searchBtn" onclick="analyzeCompetitors()">
+                <span id="btnText">Analyze Platforms & Generate Links</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+
+        <div class="results-container" id="resultsCard">
+            <h2 style="font-size: 1.1rem; margin-bottom: 16px; color: var(--text-muted); text-transform: uppercase;">Live Market Data</h2>
+            
+            <div id="platformsContainer">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Setup
+        const currentTheme = localStorage.getItem('ibi_comp_theme') || 'light';
+        if (currentTheme === 'dark') { document.body.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').innerText = '☀️ Light'; }
+        function toggleTheme() {
+            if (document.body.getAttribute('data-theme') === 'dark') { document.body.setAttribute('data-theme', 'light'); localStorage.setItem('ibi_comp_theme', 'light'); document.getElementById('themeBtn').innerText = '🌙 Dark'; } 
+            else { document.body.setAttribute('data-theme', 'dark'); localStorage.setItem('ibi_comp_theme', 'dark'); document.getElementById('themeBtn').innerText = '☀️ Light'; }
+        }
+
+        // Image Handling
+        let base64ImageString = "";
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgPreview = document.getElementById('imagePreview');
+                    imgPreview.src = e.target.result;
+                    imgPreview.style.display = 'block';
+                    base64ImageString = e.target.result.split(',')[1];
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // ⚠️ PASTE YOUR NEW APP SCRIPT URL HERE:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpWwqojBJOF90e2Zdrg_2ffpuf92IJh0JTOeP8R5vPFPK_Pbi_b6s_I5g_V_CQyo1V/exec";
+
+        function analyzeCompetitors() {
+            const productName = document.getElementById('productName').value.trim();
+            const quantity = document.getElementById('quantity').value;
+            
+            if (!productName || !base64ImageString) {
+                alert("Please provide both a Product Name and an Image."); return;
+            }
+
+            const btn = document.getElementById('searchBtn');
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const resultsCard = document.getElementById('resultsCard');
+            
+            btn.disabled = true; btnText.innerText = "Scanning Platforms...";
+            spinner.style.display = "block"; resultsCard.style.display = "none";
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify({ productName: productName, quantity: quantity, image: base64ImageString }),
+                headers: { "Content-Type": "text/plain;charset=utf-8" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false; btnText.innerText = "Analyze Platforms & Generate Links";
+                spinner.style.display = "none";
+
+                if (data.status === "success") {
+                    renderPlatforms(productName, data.data);
+                    resultsCard.style.display = "block";
+                    resultsCard.scrollIntoView({ behavior: 'smooth' });
+                } else { alert("Error: " + data.message); }
+            })
+            .catch(error => {
+                btn.disabled = false; btnText.innerText = "Analyze Platforms & Generate Links";
+                spinner.style.display = "none";
+                alert("Network error. Please try again.");
+            });
+        }
+
+        function renderPlatforms(productName, aiData) {
+            const container = document.getElementById('platformsContainer');
+            container.innerHTML = ""; // Clear old results
+            
+            // Encode the product name so it works in URLs (e.g., "Stone Diyas" -> "Stone%20Diyas")
+            const query = encodeURIComponent(productName);
+
+            const platforms = [
+                { id: "Amazon", name: "Amazon India", data: aiData.Amazon, btnClass: "amz-btn", url: `https://www.amazon.in/s?k=${query}&s=review-rank` },
+                { id: "Flipkart", name: "Flipkart", data: aiData.Flipkart, btnClass: "flp-btn", url: `https://www.flipkart.com/search?q=${query}&sort=popularity` },
+                { id: "Shopsy", name: "Shopsy", data: aiData.Shopsy, btnClass: "shp-btn", url: `https://www.shopsy.in/search?q=${query}` },
+                { id: "Meesho", name: "Meesho", data: aiData.Meesho, btnClass: "msh-btn", url: `https://www.meesho.com/search?q=${query}` },
+                { id: "ShopClues", name: "ShopClues", data: aiData.ShopClues, btnClass: "scl-btn", url: `https://www.shopclues.com/search?q=${query}` }
+            ];
+
+            platforms.forEach(plat => {
+                const html = `
+                    <div class="platform-card">
+                        <div class="platform-info">
+                            <div class="platform-name">${plat.name}</div>
+                            <div class="platform-price">Est: ${plat.data.price}</div>
+                            <div class="platform-brands">Top Brands: ${plat.data.topBrands}</div>
+                        </div>
+                        <a href="${plat.url}" target="_blank" class="platform-btn ${plat.btnClass}">View Top Sellers ↗</a>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+    </script>
+</body>
+</html>
