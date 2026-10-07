@@ -1,7 +1,7 @@
 {
   "name": "IBI Competitor Price Link API",
   "short_name": "IBI Competitor",
-  "id": "./",
+  "id": "/Competitor/",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
