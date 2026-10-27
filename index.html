@@ -95,11 +95,24 @@
             .platform-card { flex-direction: column; align-items: stretch; text-align: center; }
         }
         .app-version-badge { position: absolute; top: 6px; left: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1px 8px; }
+        /* v1.5 EDGE TO EDGE ON EVERY SCREEN SIZE (Founder 27 Oct 2026: "Yes, make all the apps edge to edge on laptop too").
+           No centred 800px column and no 20px outer gutter at any width: cards are full-bleed with 10px inner side
+           padding; on wide screens the platform results sit in columns. */
+        html, body { overflow-x: clip; }
+        body { padding: 0; display: block; }
+        .container { max-width: none; margin-top: 0; }
+        .header { padding: 30px 10px 10px; margin-bottom: 0; gap: 10px; }
+        .theme-toggle { white-space: nowrap; }
+        .card { border-radius: 0; border-left: 0; border-right: 0; box-shadow: none; padding: 20px 10px; margin-bottom: 8px; overflow-wrap: break-word; }
+        .results-container h2 { padding: 0 10px; }
+        #platformsContainer { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 8px; }
+        .platform-card { margin-bottom: 0; border-radius: 0; border-left: 0; border-right: 0; padding: 16px 10px; background: var(--surface); overflow-wrap: break-word; }
+        button, a, input { overflow-wrap: normal; }
     </style>
 <script src="ibi-share.js" defer data-slot=".hdr-actions"></script>
 </head>
 <body data-theme="light">
-    <span class="app-version-badge">v1.4</span>
+    <span class="app-version-badge">v1.5</span>
 
     <div class="container">
         <div class="header">

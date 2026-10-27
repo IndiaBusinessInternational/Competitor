@@ -1,4 +1,6 @@
-# Competitor v1.4
+# Competitor v1.5
+
+**Edge to edge on every screen size (v1.5, 27 Oct 2026)** — no centred 800 px column on laptops and no 20 px gutter on phones; full-bleed cards with 10 px inner padding; platform results in columns on wide screens.
 
 **WhatsApp preview + Share button (v1.4, 27 Oct 2026)** — `og-banner.jpg` (1200×630 JPEG under 300 KB) with `og:image:type image/jpeg`, so WhatsApp shows the picture; a **Share this app** button (`ibi-share.js`) sits beside the theme button. The old `og-banner.png` stays deployed.
 
