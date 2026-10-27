@@ -18,9 +18,11 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="India Business International">
     <meta property="og:title" content="IBI Competitor Price Link">
+    <meta property="og:image:secure_url" content="https://indiabusinessinternational.github.io/Competitor/og-banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:description" content="Track competitor product prices across marketplaces — minimum, maximum and average.">
     <meta property="og:url" content="https://indiabusinessinternational.github.io/Competitor/">
-    <meta property="og:image" content="https://indiabusinessinternational.github.io/Competitor/og-banner.png">
+    <meta property="og:image" content="https://indiabusinessinternational.github.io/Competitor/og-banner.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="IBI Competitor Price Link — India Business International">
@@ -28,7 +30,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="IBI Competitor Price Link">
     <meta name="twitter:description" content="Track competitor product prices across marketplaces — minimum, maximum and average.">
-    <meta name="twitter:image" content="https://indiabusinessinternational.github.io/Competitor/og-banner.png">
+    <meta name="twitter:image" content="https://indiabusinessinternational.github.io/Competitor/og-banner.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -48,6 +50,7 @@
         
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .header h1 { font-size: 1.5rem; font-weight: 700; }
+        .hdr-actions { display: flex; align-items: center; gap: 8px; }
         .theme-toggle { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
         
         .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); margin-bottom: 24px; }
@@ -93,14 +96,17 @@
         }
         .app-version-badge { position: absolute; top: 6px; left: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1px 8px; }
     </style>
+<script src="ibi-share.js" defer data-slot=".hdr-actions"></script>
 </head>
 <body data-theme="light">
-    <span class="app-version-badge">v1.3</span>
+    <span class="app-version-badge">v1.4</span>
 
     <div class="container">
         <div class="header">
             <h1>📊 Competitor Price Link</h1>
-            <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+            <div class="hdr-actions">
+                <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">🌙 Dark</button>
+            </div>
         </div>
 
         <div class="card">
